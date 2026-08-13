@@ -58,8 +58,23 @@ Use the reviewed release notes under `docs/releases/` as the basis for the GitHu
 
 The first public milestone is `v0.1.0`: a specification draft plus reference implementation. It is not a 1.0 stability promise.
 
-## PyPI is a separate decision
+## PyPI is a separate release boundary
 
-Creating the GitHub tag/release does not automatically authorize a PyPI publication.
+Creating a GitHub tag/release does not by itself authorize a PyPI publication.
 
-Before PyPI publication, separately confirm package-name ownership, distribution metadata, upload credentials/trusted publishing configuration, and the exact artifacts to upload. Do not rebuild different artifacts after the GitHub release and assume they are equivalent.
+Future PyPI publication uses `.github/workflows/publish.yml` and PyPI Trusted Publishing. The workflow:
+
+- triggers only on a future non-prerelease GitHub Release publication;
+- checks out the released tag rather than a moving branch;
+- verifies `vX.Y.Z` matches the package version;
+- builds wheel and sdist in an unprivileged job;
+- transfers those exact distributions to a separate publish job;
+- grants `id-token: write` only to the publish job;
+- uses the GitHub environment named `pypi`;
+- does not require a long-lived PyPI API token.
+
+Before the first PyPI publication, maintainers MUST configure the matching PyPI Trusted Publisher/pending publisher and the GitHub `pypi` environment, and MUST re-check the `statereceipt` project name immediately before publishing.
+
+The existing GitHub `v0.1.0` release predates the trusted publishing workflow. Do not later rebuild `0.1.0` and present the new files as the exact artifacts reviewed for that GitHub Release. Prefer a subsequent patch release for the first end-to-end PyPI publication.
+
+See [`docs/PYPI_PUBLISHING.md`](docs/PYPI_PUBLISHING.md) for the maintainer setup and post-publication verification procedure.
