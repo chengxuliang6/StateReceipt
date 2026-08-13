@@ -20,6 +20,18 @@ Claim ──supported_by──> Evidence ──depends_on──> Artifact digest
 
 Si cambia un artefacto del que depende una afirmación, la evidencia asociada puede quedar `stale` y la afirmación debe reevaluarse. **`stale` no significa `false`.** Significa que el respaldo anterior ya no puede aplicarse de forma segura al estado actual.
 
+## Inicio rápido en 5 minutos
+
+Para ver el comportamiento central inmediatamente, sigue el [inicio rápido en Español](QUICKSTART.es.md).
+
+El recorrido muestra:
+
+```text
+supported → cambio del artefacto → stale
+```
+
+No necesita ninguna API de LLM. También están disponibles las versiones [English](QUICKSTART.md) y [简体中文](QUICKSTART.zh-CN.md).
+
 ## Lo que StateReceipt no es
 
 StateReceipt no es:
