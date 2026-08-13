@@ -32,7 +32,7 @@ It demonstrates `supported → artifact change → stale` without requiring any 
 
 ## What StateReceipt is not
 
-StateReceipt is not a memory database, RAG system, chat-history sync format, agent runtime, orchestrator, scheduler, or replacement for Git/CI. The deterministic verifier does not ask an LLM to decide whether arbitrary natural-language evidence is logically true.
+StateReceipt is not a memory database, RAG system, chat-history sync format, agent runtime, orchestrator, scheduler, sandbox, or replacement for Git/CI. The deterministic verifier does not ask an LLM to decide whether arbitrary natural-language evidence is logically true.
 
 ## Install for development
 
@@ -51,10 +51,12 @@ statereceipt init
 statereceipt capture src/app.py tests/test_app.py --work-id AUTH-17 --objective "Implement auth middleware"
 statereceipt validate .statereceipt/receipts/receipt.yaml
 statereceipt verify .statereceipt/receipts/receipt.yaml
-statereceipt verify .statereceipt/receipts/receipt.yaml --replay
+statereceipt verify .statereceipt/receipts/receipt.yaml --replay --trust-receipt
 statereceipt inspect .statereceipt/receipts/receipt.yaml
 statereceipt diff old.yaml new.yaml
 ```
+
+Replay is deliberately guarded. `--replay` by itself is refused; command execution requires the additional `--trust-receipt` acknowledgement after you have reviewed the receipt. StateReceipt does **not** sandbox replayed commands or authenticate the receipt producer. See [`SECURITY.md`](SECURITY.md).
 
 ## v0.1 capabilities
 
@@ -65,7 +67,7 @@ statereceipt diff old.yaml new.yaml
 - Explicit claim/evidence binding.
 - Artifact-driven staleness detection.
 - Deterministic claim evaluation.
-- Optional replay of reproducible command/test evidence.
+- Explicitly trusted replay of reproducible command/test evidence.
 - Receipt inspection and diffing.
 
 ## Example domains
@@ -92,7 +94,7 @@ See [`DESIGN_PROVENANCE.md`](DESIGN_PROVENANCE.md) and [`PRIOR_ART.md`](PRIOR_AR
 
 ## Contributing and security
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) before proposing implementation or specification changes. See [`SECURITY.md`](SECURITY.md) before replaying receipts from untrusted sources or reporting a vulnerability.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) before proposing implementation or specification changes. See [`SECURITY.md`](SECURITY.md) before replaying any receipt or reporting a vulnerability. Security guidance is also available in [简体中文](docs/SECURITY.zh-CN.md) and [Español](docs/SECURITY.es.md).
 
 ## License
 
