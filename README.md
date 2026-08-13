@@ -32,6 +32,8 @@ Want to see the core behavior immediately? Follow the copy/paste walkthrough:
 
 It demonstrates `supported → artifact change → stale` without requiring any LLM API.
 
+For the original interrupted-work use case, see the [cross-assistant continuation lab](examples/cross-assistant/README.md), which hands a Receipt from one fresh assistant/session to another and deliberately changes an artifact after the handoff.
+
 ## What StateReceipt is not
 
 StateReceipt is not a memory database, RAG system, chat-history sync format, agent runtime, orchestrator, scheduler, sandbox, or replacement for Git/CI. The deterministic verifier does not ask an LLM to decide whether arbitrary natural-language evidence is logically true.
@@ -86,11 +88,12 @@ Chinese and Spanish versions of the user-facing guides are linked from each guid
 
 ## Example domains
 
-The same v0.1 schema is exercised against three deliberately different workflows:
+The same v0.1 schema is exercised across deliberately different workflows:
 
 - Python software development: `examples/python-auth.yaml`
 - FPGA/Verilog engineering: `examples/fpga-verilog.yaml`
 - MATLAB/research simulation: `examples/matlab-qpsk.yaml`
+- Cross-assistant interrupted-work continuation: [`examples/cross-assistant/`](examples/cross-assistant/README.md)
 
 ## Specification
 
