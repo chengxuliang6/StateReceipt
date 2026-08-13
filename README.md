@@ -20,6 +20,16 @@ Claim ──supported_by──> Evidence ──depends_on──> Artifact digest
 
 If a depended-on artifact changes, supporting evidence can become stale and the affected claim can require re-evaluation. In StateReceipt, **stale does not mean false**.
 
+## 5-minute Quick Start
+
+Want to see the core behavior immediately? Follow the copy/paste walkthrough:
+
+- [English Quick Start](docs/QUICKSTART.md)
+- [简体中文快速上手](docs/QUICKSTART.zh-CN.md)
+- [Inicio rápido en Español](docs/QUICKSTART.es.md)
+
+It demonstrates `supported → artifact change → stale` without requiring any LLM API.
+
 ## What StateReceipt is not
 
 StateReceipt is not a memory database, RAG system, chat-history sync format, agent runtime, orchestrator, scheduler, or replacement for Git/CI. The deterministic verifier does not ask an LLM to decide whether arbitrary natural-language evidence is logically true.
