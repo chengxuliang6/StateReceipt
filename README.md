@@ -50,6 +50,7 @@ pytest
 statereceipt init
 statereceipt capture src/app.py tests/test_app.py --work-id AUTH-17 --objective "Implement auth middleware"
 statereceipt validate .statereceipt/receipts/receipt.yaml
+statereceipt validate-chain receipt-a.yaml receipt-b.yaml receipt-c.yaml
 statereceipt verify .statereceipt/receipts/receipt.yaml
 statereceipt verify .statereceipt/receipts/receipt.yaml --replay --trust-receipt
 statereceipt inspect .statereceipt/receipts/receipt.yaml
@@ -68,7 +69,18 @@ Replay is deliberately guarded. `--replay` by itself is refused; command executi
 - Artifact-driven staleness detection.
 - Deterministic claim evaluation.
 - Explicitly trusted replay of reproducible command/test evidence.
-- Receipt inspection and diffing.
+- Immutable Receipt predecessor-chain validation.
+- Receipt inspection and lifecycle-aware diffing.
+
+## Guides
+
+- [5-minute Quick Start](docs/QUICKSTART.md)
+- [Receipt lifecycle and predecessor semantics](docs/LIFECYCLE.md)
+- [Replay security and trust model](SECURITY.md)
+- [Optional in-toto / DSSE interoperability profile](docs/ATTESTATION_PROFILE.md)
+- [Prior art and project boundary](PRIOR_ART.md)
+
+Chinese and Spanish versions of the user-facing guides are linked from each guide and from the translated READMEs.
 
 ## Example domains
 
@@ -84,7 +96,7 @@ Normative semantics live in [`spec/SPEC.md`](spec/SPEC.md). The machine-readable
 
 The English specification is the normative source for v0.1. Translated documentation is provided for accessibility; if a translation conflicts with `spec/SPEC.md`, the English normative text controls.
 
-The specification uses RFC-style `MUST`, `SHOULD`, and `MAY` language. StateReceipt v0.1 intentionally does not define a cryptographic signing envelope; future authentication should reuse established attestation mechanisms rather than inventing bespoke cryptography.
+The specification uses RFC-style `MUST`, `SHOULD`, and `MAY` language. StateReceipt v0.1 intentionally does not define a cryptographic signing envelope; optional interoperability reuses in-toto/DSSE rather than inventing bespoke cryptography.
 
 ## Project provenance and related work
 

@@ -52,6 +52,7 @@ pytest
 statereceipt init
 statereceipt capture src/app.py tests/test_app.py --work-id AUTH-17 --objective "Implement auth middleware"
 statereceipt validate .statereceipt/receipts/receipt.yaml
+statereceipt validate-chain receipt-a.yaml receipt-b.yaml receipt-c.yaml
 statereceipt verify .statereceipt/receipts/receipt.yaml
 statereceipt verify .statereceipt/receipts/receipt.yaml --replay --trust-receipt
 statereceipt inspect .statereceipt/receipts/receipt.yaml
@@ -70,20 +71,16 @@ Replay 采用显式信任边界：单独使用 `--replay` 会被拒绝，只有�
 - 基于工件变化的 staleness 检测
 - 确定性 claim evaluation
 - 需要显式信任的 command/test replay
-- Receipt inspect 与 diff
+- 不可变 Receipt 的 predecessor-chain 验证
+- Receipt inspect 与带 lifecycle 关系的 diff
 
-## Claim 状态的确定性规则
+## 指南
 
-v0.1 按以下顺序评估 Claim：
-
-1. 存在有效的 `contradicted_by` 证据 → `contradicted`
-2. 显式 `depends_on` 依赖已 stale / missing / invalid → `stale`
-3. 至少一个独立 supporting evidence 仍有效 → `supported`
-4. 所有 supporting evidence 都已失效 → `stale`
-5. 支持证据中仍有未知状态 → `unknown`
-6. 没有 supporting evidence → `unsupported`
-
-该顺序是规范的一部分，独立实现不得自行调整优先级。
+- [5 分钟中文快速上手](QUICKSTART.zh-CN.md)
+- [Receipt 生命周期与 predecessor 语义](LIFECYCLE.zh-CN.md)
+- [Replay 安全与信任模型](SECURITY.zh-CN.md)
+- [可选的 in-toto / DSSE 互操作说明](ATTESTATION_PROFILE.zh-CN.md)
+- [Prior art 与项目边界（英文）](../PRIOR_ART.md)
 
 ## 示例领域
 
