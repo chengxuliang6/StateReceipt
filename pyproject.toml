@@ -17,6 +17,12 @@ dependencies = [
   "jsonschema>=4.22,<5",
 ]
 
+[project.urls]
+Homepage = "https://github.com/chengxuliang6/StateReceipt"
+Repository = "https://github.com/chengxuliang6/StateReceipt"
+Issues = "https://github.com/chengxuliang6/StateReceipt/issues"
+Changelog = "https://github.com/chengxuliang6/StateReceipt/blob/main/CHANGELOG.md"
+
 [project.optional-dependencies]
 dev = ["pytest>=8,<9"]
 
