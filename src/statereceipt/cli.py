@@ -7,6 +7,7 @@ from rich.table import Table
 from .capture import capture_receipt
 from .diffing import diff_receipts
 from .io import load_receipt, dump_receipt
+from .lifecycle import validate_chain
 from .schema import schema_errors
 from .semantic import semantic_errors
 from .verify import verify as verify_doc
@@ -52,6 +53,35 @@ def validate_cmd(receipt: Path):
             console.print(f"[red]ERR[/red] {e}")
         raise typer.Exit(1)
     console.print("[green]OK[/green] schema and references valid")
+
+@app.command(name="validate-chain")
+def validate_chain_cmd(receipts: list[Path] = typer.Argument(..., help="Receipt files to validate as a local lifecycle set"), json_output: bool = typer.Option(False, "--json")):
+    docs = []
+    errors: list[str] = []
+    for path in receipts:
+        doc = load_receipt(path)
+        per_receipt = schema_errors(doc) + semantic_errors(doc)
+        if per_receipt:
+            errors.extend(f"{path}: {err}" for err in per_receipt)
+        docs.append(doc)
+
+    result = validate_chain(docs) if not errors else {
+        "valid": False,
+        "errors": errors,
+        "unresolved_predecessors": [],
+        "receipt_count": len(docs),
+    }
+    if json_output:
+        console.print_json(json.dumps(result))
+    else:
+        for err in result["errors"]:
+            console.print(f"[red]ERR[/red] {err}")
+        for item in result["unresolved_predecessors"]:
+            console.print(f"[yellow]WARN[/yellow] {item['receipt']}: predecessor {item['predecessor']} is external or not in this validation set")
+        if result["valid"]:
+            console.print(f"[green]OK[/green] lifecycle set valid ({result['receipt_count']} receipts)")
+    if not result["valid"]:
+        raise typer.Exit(1)
 
 @app.command()
 def verify(

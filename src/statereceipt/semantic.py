@@ -7,6 +7,12 @@ def semantic_errors(doc: dict) -> list[str]:
     evidence = doc.get("evidence", [])
     artifacts = doc.get("snapshot", {}).get("artifacts", [])
 
+    receipt = doc.get("receipt", {})
+    receipt_id = receipt.get("id")
+    predecessor = receipt.get("predecessor", {}).get("id")
+    if receipt_id is not None and predecessor == receipt_id:
+        errors.append(f"receipt {receipt_id}: predecessor self-reference")
+
     claim_ids = [x.get("id") for x in claims]
     evidence_ids = [x.get("id") for x in evidence]
     artifact_ids = [x.get("id") for x in artifacts]

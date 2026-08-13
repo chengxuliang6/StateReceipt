@@ -32,9 +32,53 @@ A v0.1 receipt MUST contain:
 
 Unknown top-level properties are invalid in v0.1.
 
-## 3. Receipt immutability
+## 3. Receipt immutability and lifecycle
 
 A receipt represents one point in time. Producers SHOULD NOT mutate an issued receipt to reflect later work. A later state SHOULD be represented by a new receipt, optionally linked through `receipt.predecessor.id`.
+
+### 3.1 Predecessor semantics
+
+`receipt.predecessor.id` is an opaque Receipt identifier. It indicates that the current Receipt directly continues the point-in-time work state represented by the identified predecessor.
+
+A Receipt:
+- MUST NOT name itself as its predecessor.
+- MUST contain at most one direct predecessor in v0.1.
+- MAY refer to a predecessor that is not present in the current local validation set.
+- MUST NOT be considered invalid solely because its predecessor cannot be resolved locally.
+
+An unresolved predecessor is therefore **external or unresolved**, not automatically malformed. v0.1 does not define a global Receipt registry or require network resolution.
+
+### 3.2 Local chain validation
+
+When validating a set of Receipts together, a conforming chain validator MUST reject duplicate `receipt.id` values within that validation set.
+
+For predecessor edges that resolve within the supplied set, the validator MUST reject cycles. A self-reference is a cycle of length one and MUST also be rejected by single-Receipt semantic validation.
+
+A chain validator MAY report predecessor IDs that are absent from the supplied set as unresolved. Such unresolved references MUST NOT by themselves make the local set invalid.
+
+Example valid lifecycle:
+
+```text
+SR-A (interrupted)
+  ↓ predecessor of
+SR-B (in_progress)
+  ↓ predecessor of
+SR-C (completed)
+```
+
+The work-state transitions shown above are illustrative only. StateReceipt v0.1 does not impose a finite-state machine on `work.state`; it records lifecycle snapshots rather than controlling workflow transitions.
+
+### 3.3 Diff semantics
+
+`statereceipt diff A B` MUST NOT assume that A and B are adjacent or even belong to the same lifecycle chain.
+
+A v0.1 implementation SHOULD report the directly observable relation as one of:
+- `same_receipt`
+- `direct_successor` when `B.receipt.predecessor.id == A.receipt.id`
+- `direct_predecessor` when `A.receipt.predecessor.id == B.receipt.id`
+- `not_directly_linked` otherwise
+
+`not_directly_linked` does not prove that two Receipts are unrelated; they may be non-adjacent members of a larger chain that was not supplied.
 
 ## 4. Work
 
