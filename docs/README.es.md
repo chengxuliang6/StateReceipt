@@ -44,6 +44,7 @@ pytest
 statereceipt init
 statereceipt capture src/app.py tests/test_app.py --work-id AUTH-17 --objective "Implement auth middleware"
 statereceipt validate .statereceipt/receipts/receipt.yaml
+statereceipt validate-chain receipt-a.yaml receipt-b.yaml receipt-c.yaml
 statereceipt verify .statereceipt/receipts/receipt.yaml
 statereceipt verify .statereceipt/receipts/receipt.yaml --replay --trust-receipt
 statereceipt inspect .statereceipt/receipts/receipt.yaml
@@ -62,18 +63,16 @@ Replay utiliza un límite de confianza explícito: `--replay` por sí solo es re
 - Detección de `staleness` por cambios de artefactos
 - Evaluación determinista de Claims
 - Replay de comandos/pruebas solo con confianza explícita
-- Inspección y comparación de Receipts
+- Validación de cadenas predecessor para Receipts inmutables
+- Inspección y diff con relación de ciclo de vida
 
-## Reglas deterministas para Claims
+## Guías
 
-v0.1 evalúa cada Claim en este orden:
-
-1. Evidencia válida en `contradicted_by` → `contradicted`
-2. Una dependencia explícita `depends_on` está stale / missing / invalid → `stale`
-3. Al menos una evidencia de soporte independiente sigue válida → `supported`
-4. Toda la evidencia de soporte está invalidada → `stale`
-5. Parte del soporte permanece desconocido → `unknown`
-6. No hay referencias de soporte → `unsupported`
+- [Inicio rápido en 5 minutos](QUICKSTART.es.md)
+- [Ciclo de vida y semántica de predecessor](LIFECYCLE.es.md)
+- [Seguridad y modelo de confianza de replay](SECURITY.es.md)
+- [Perfil opcional de interoperabilidad in-toto / DSSE](ATTESTATION_PROFILE.es.md)
+- [Prior art y límites del proyecto (inglés)](../PRIOR_ART.md)
 
 ## Especificación y traducciones
 
