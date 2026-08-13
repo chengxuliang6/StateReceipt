@@ -20,6 +20,18 @@ Claim ──supported_by──> Evidence ──depends_on──> Artifact digest
 
 当声明依赖的工件发生变化时，相关证据可能变为 `stale`，声明需要重新评估。**`stale` 不等于 `false`。** 它只表示原先的支持已经不能安全地应用于当前状态。
 
+## 5 分钟快速上手
+
+如果你想马上看到 StateReceipt 的核心效果，可以直接按照 [中文快速上手](QUICKSTART.zh-CN.md) 操作。
+
+它会完整演示：
+
+```text
+supported → 修改工件 → stale
+```
+
+整个示例不需要任何 LLM API，也可以切换到 [English](QUICKSTART.md) 或 [Español](QUICKSTART.es.md) 版本。
+
 ## StateReceipt 不是什么
 
 StateReceipt 不是：
