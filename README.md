@@ -4,6 +4,8 @@
 
 **Languages:** English | [简体中文](docs/README.zh-CN.md) | [Español](docs/README.es.md)
 
+**Current release:** [`v0.1.0`](../../releases/tag/v0.1.0) · [5-minute Quick Start](docs/QUICKSTART.md) · [Specification](spec/SPEC.md) · [Contributing](CONTRIBUTING.md)
+
 StateReceipt is an open, vendor-neutral specification and Python reference CLI for recording claims about a work unit together with explicit evidence, artifact snapshots, validity dependencies, and deterministic freshness checks.
 
 The motivating question is narrow: **when an AI-assisted task is interrupted or continued elsewhere, which claims about the work are still supported by the current artifacts?**
@@ -103,6 +105,14 @@ The specification uses RFC-style `MUST`, `SHOULD`, and `MAY` language. StateRece
 StateReceipt was designed after a prior-art review specifically to avoid presenting established concepts such as agent handoffs, persistent memory, artifact digests, generic attestations, or evidence-backed assertions as new inventions.
 
 See [`DESIGN_PROVENANCE.md`](DESIGN_PROVENANCE.md) and [`PRIOR_ART.md`](PRIOR_ART.md) for the development boundary and related-work record.
+
+## Community
+
+StateReceipt is now accepting focused external contributions. Good entry points are the repository's [`good first issue`](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and [`help wanted`](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) queues.
+
+Before opening a PR, read [`CONTRIBUTING.md`](CONTRIBUTING.md). Specification changes should explain compatibility impact and preserve deterministic verifier behavior. Documentation contributions are welcome in English, Simplified Chinese, Spanish, and additional community-maintained languages.
+
+If you try StateReceipt in a real workflow, an issue describing what worked, what was unclear, or what failed is especially useful at this stage.
 
 ## Contributing and security
 
