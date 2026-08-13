@@ -54,8 +54,34 @@ def validate_cmd(receipt: Path):
     console.print("[green]OK[/green] schema and references valid")
 
 @app.command()
-def verify(receipt: Path, root: Path = typer.Option(Path("."), "--root"), replay: bool = typer.Option(False, "--replay"), json_output: bool = typer.Option(False, "--json")):
-    result = verify_doc(load_receipt(receipt), root.resolve(), replay=replay)
+def verify(
+    receipt: Path,
+    root: Path = typer.Option(Path("."), "--root"),
+    replay: bool = typer.Option(
+        False,
+        "--replay",
+        help="Request replay of reproducible evidence. Requires --trust-receipt.",
+    ),
+    trust_receipt: bool = typer.Option(
+        False,
+        "--trust-receipt",
+        help="Acknowledge that replay commands in this receipt may execute arbitrary programs. Does not provide sandboxing or authenticate the producer.",
+    ),
+    json_output: bool = typer.Option(False, "--json"),
+):
+    if trust_receipt and not replay:
+        console.print("[yellow]WARN[/yellow] --trust-receipt has no effect without --replay")
+    if replay and not trust_receipt:
+        console.print(
+            "[red]ERR[/red] replay refused: receipt commands are untrusted executable input. "
+            "Review the receipt and pass --trust-receipt only if you accept the execution risk."
+        )
+        console.print(
+            "StateReceipt does not sandbox replayed commands and does not authenticate the receipt producer."
+        )
+        raise typer.Exit(2)
+
+    result = verify_doc(load_receipt(receipt), root.resolve(), replay=replay and trust_receipt)
     if json_output:
         console.print_json(json.dumps(result))
     else:
