@@ -31,3 +31,36 @@ jobs:
           statereceipt validate examples/python-auth.yaml
           statereceipt validate examples/fpga-verilog.yaml
           statereceipt validate examples/matlab-qpsk.yaml
+
+  release-package:
+    name: release package smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Build wheel and sdist
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+          ls -la dist
+      - name: Install and test wheel
+        shell: bash
+        run: |
+          python -m venv .venv-wheel
+          .venv-wheel/bin/python -m pip install --upgrade pip
+          .venv-wheel/bin/python -m pip install dist/*.whl
+          .venv-wheel/bin/statereceipt --help
+          .venv-wheel/bin/statereceipt validate examples/python-auth.yaml
+          .venv-wheel/bin/python -c "from importlib.resources import files; p=files('statereceipt.schema').joinpath('statereceipt-v0.1.schema.json'); assert p.is_file(), p; print(p)"
+      - name: Install and test sdist
+        shell: bash
+        run: |
+          python -m venv .venv-sdist
+          .venv-sdist/bin/python -m pip install --upgrade pip
+          .venv-sdist/bin/python -m pip install dist/*.tar.gz
+          .venv-sdist/bin/statereceipt --help
+          .venv-sdist/bin/statereceipt validate examples/python-auth.yaml
+          .venv-sdist/bin/python -c "from importlib.resources import files; p=files('statereceipt.schema').joinpath('statereceipt-v0.1.schema.json'); assert p.is_file(), p; print(p)"
