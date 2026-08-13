@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from .lifecycle import direct_relation
+
+
 def diff_receipts(a: dict, b: dict) -> dict:
     aa = {x["id"]: x for x in a["snapshot"]["artifacts"]}
     bb = {x["id"]: x for x in b["snapshot"]["artifacts"]}
@@ -14,6 +17,7 @@ def diff_receipts(a: dict, b: dict) -> dict:
     return {
         "receipt_from": a["receipt"]["id"],
         "receipt_to": b["receipt"]["id"],
+        "lifecycle_relation": direct_relation(a, b),
         "artifacts": {"added": added, "removed": removed, "changed": changed},
         "claims": {"added": claim_added, "removed": claim_removed, "changed": claim_changed},
         "work_state": {"from": a["work"]["state"], "to": b["work"]["state"]},
