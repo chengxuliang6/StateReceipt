@@ -1,0 +1,115 @@
+spec:
+  name: StateReceipt
+  version: "0.1"
+
+receipt:
+  id: sr_cross_assistant_stage_a
+  created_at: "2026-08-13T13:55:00+08:00"
+  producer:
+    type: ai_agent
+    name: assistant-a
+
+work:
+  id: CROSS-ASSISTANT-LAB
+  objective: >-
+    Implement normalize_score so integer scores are clamped into the inclusive
+    0..100 range, verify the behavior, and leave a safe continuation boundary.
+  state: interrupted
+
+snapshot:
+  artifacts:
+    - id: score-implementation
+      path: workspace/score.py
+      media_type: text/x-python
+      digest:
+        algorithm: sha256
+        value: a5e582daeaeae53cd1a4528eb1ea9dcdd2f7a51395fd2fa90245732c5d3c5aa5
+    - id: score-tests
+      path: tests/test_score.py
+      media_type: text/x-python
+      digest:
+        algorithm: sha256
+        value: 89e0deea188b08d49b23ca39e4865673e1bb2cc11f50d698e53cebc0fe686fda
+
+claims:
+  - id: claim-clamp-behavior
+    kind: behavior
+    statement: >-
+      normalize_score clamps integer inputs below 0 to 0, leaves ordinary
+      in-range values unchanged, and clamps values above 100 to 100.
+    source:
+      type: agent
+      ref: assistant-a
+    verification:
+      status: supported
+    supported_by:
+      - evidence-score-artifact
+      - evidence-score-tests
+    depends_on:
+      artifacts:
+        - score-implementation
+        - score-tests
+      evidence:
+        - evidence-score-artifact
+        - evidence-score-tests
+
+  - id: claim-tests-pass
+    kind: validation
+    statement: The Stage A unit tests pass for the captured implementation.
+    source:
+      type: tool
+      ref: python-unittest
+    verification:
+      status: supported
+    supported_by:
+      - evidence-test-run
+    depends_on:
+      artifacts:
+        - score-implementation
+        - score-tests
+      evidence:
+        - evidence-test-run
+
+evidence:
+  - id: evidence-score-artifact
+    type: artifact
+    strength: checkable
+    artifact_ref: score-implementation
+
+  - id: evidence-score-tests
+    type: artifact
+    strength: checkable
+    artifact_ref: score-tests
+
+  - id: evidence-test-run
+    type: test
+    strength: reproducible
+    framework: unittest
+    execution:
+      argv:
+        - python
+        - -m
+        - unittest
+        - discover
+        - -s
+        - tests
+      cwd: "."
+      exit_code: 0
+    summary:
+      passed: 3
+      failed: 0
+
+continuation:
+  next_actions:
+    - id: next-boundary-tests
+      description: >-
+        Continue by adding explicit boundary-value coverage and confirm that the
+        current implementation still preserves ordinary in-range values.
+      acceptance:
+        - Tests include 0 and 100 boundary cases.
+        - An in-range value such as 42 remains 42.
+        - StateReceipt verification is re-run against the current artifacts.
+  unresolved:
+    - >-
+      The product requirement has not decided whether future score normalization
+      may quantize/round in-range values. Do not assume rounding is acceptable.
