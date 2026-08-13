@@ -41,6 +41,20 @@ Changes to normative semantics should be proposed in an issue before implementat
 - verifier impact;
 - at least one concrete receipt example.
 
+## Translations
+
+StateReceipt welcomes documentation translations. The English `spec/SPEC.md` is the normative source for v0.1; translated documentation is non-normative and must not silently introduce different MUST/SHOULD/MAY semantics.
+
+When updating translated documentation:
+
+- preserve code, field names, enum values, and CLI commands exactly unless a user-facing explanation is being translated;
+- keep a visible link back to the English normative specification;
+- note explicitly that the English specification controls if wording differs;
+- update existing translations when a normative behavior change materially affects the translated explanation;
+- native-speaker review is encouraged for substantial translations.
+
+Current first-party documentation languages are English, Simplified Chinese (`zh-CN`), and Spanish (`es`). Additional languages are welcome through normal pull requests.
+
 ## Commit and PR guidance
 
 Prefer small, reviewable commits. PR descriptions should explain what changed, why it is needed, and how it was validated.

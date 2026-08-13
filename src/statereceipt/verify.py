@@ -64,6 +64,39 @@ def _replay_evidence(e: dict, root: Path) -> Check:
     return Check("replay", e["id"], "fail", f"exit code {cp.returncode}, expected {expected}")
 
 
+def _evaluate_claim(c: dict, artifact_state: dict[str, str], evidence_state: dict[str, str]) -> str:
+    """Evaluate a claim using deterministic v0.1 precedence.
+
+    Precedence:
+    1. Any valid contradictory evidence => contradicted.
+    2. Any explicitly declared stale/missing/invalid dependency => stale.
+    3. Any valid supporting evidence => supported.
+    4. Supporting references exist but none are valid:
+       - if every referenced support is stale/missing/invalid => stale
+       - otherwise => unknown
+    5. No supporting references => unsupported.
+    """
+    contrad = [evidence_state.get(x, "unknown") for x in c.get("contradicted_by", [])]
+    if any(s == "valid" for s in contrad):
+        return "contradicted"
+
+    deps = c.get("depends_on", {})
+    dep_art_states = [artifact_state.get(x, "unknown") for x in deps.get("artifacts", [])]
+    dep_ev_states = [evidence_state.get(x, "unknown") for x in deps.get("evidence", [])]
+    dependency_states = dep_art_states + dep_ev_states
+    if any(s in {"stale", "missing", "invalid"} for s in dependency_states):
+        return "stale"
+
+    supported = [evidence_state.get(x, "unknown") for x in c.get("supported_by", [])]
+    if any(s == "valid" for s in supported):
+        return "supported"
+    if supported and all(s in {"stale", "missing", "invalid"} for s in supported):
+        return "stale"
+    if supported:
+        return "unknown"
+    return "unsupported"
+
+
 def verify(doc: dict, root: Path, replay: bool = False) -> dict:
     checks: list[Check] = []
     serr = schema_errors(doc)
@@ -88,30 +121,15 @@ def verify(doc: dict, root: Path, replay: bool = False) -> dict:
         if replay and e["strength"] == "reproducible":
             rc = _replay_evidence(e, root)
             checks.append(rc)
-            if rc.status == "fail": state = "invalid"
+            if rc.status == "fail":
+                state = "invalid"
         evidence_state[e["id"]] = state
 
     claim_results: dict[str, str] = {}
     for c in doc["claims"]:
-        deps = c.get("depends_on", {})
-        dep_art_states = [artifact_state.get(x, "unknown") for x in deps.get("artifacts", [])]
-        if any(s in {"stale", "missing"} for s in dep_art_states):
-            result = "stale"
-        else:
-            contrad = [evidence_state.get(x, "unknown") for x in c.get("contradicted_by", [])]
-            supported = [evidence_state.get(x, "unknown") for x in c.get("supported_by", [])]
-            if any(s == "valid" for s in contrad):
-                result = "contradicted"
-            elif supported and any(s == "valid" for s in supported):
-                result = "supported"
-            elif supported and all(s in {"stale", "missing", "invalid"} for s in supported):
-                result = "stale"
-            elif supported:
-                result = "unknown"
-            else:
-                result = "unsupported"
+        result = _evaluate_claim(c, artifact_state, evidence_state)
         claim_results[c["id"]] = result
-        checks.append(Check("claim", c["id"], "pass" if result in {"supported","unsupported","unknown"} else result, f"evaluated as {result}"))
+        checks.append(Check("claim", c["id"], "pass" if result in {"supported", "unsupported", "unknown"} else result, f"evaluated as {result}"))
 
     hard_fail = any(c.status == "fail" for c in checks)
     return {"valid": not hard_fail, "checks": [c.as_dict() for c in checks], "claims": claim_results}
