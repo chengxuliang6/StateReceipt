@@ -1,0 +1,74 @@
+spec:
+  name: StateReceipt
+  version: '0.1'
+receipt:
+  id: sr-fpga-001
+  created_at: '2026-08-13T02:35:00+08:00'
+  producer:
+    type: mixed
+    name: engineer+assistant
+work:
+  id: FPGA-768
+  objective: Implement and validate a 768-channel output scheduler in Verilog.
+  state: in_progress
+snapshot:
+  repository:
+    vcs: git
+    commit: b77ce12
+    dirty: false
+  artifacts:
+  - id: rtl-controller
+    path: rtl/channel_controller.v
+    media_type: text/x-verilog
+    digest:
+      algorithm: sha256
+      value: 09317fe22ca2985249d900071ed1e7bba89a9eb8120d31f66e7143957e44dbcf
+  - id: quartus-timing
+    path: output/timing.rpt
+    media_type: text/plain
+    digest:
+      algorithm: sha256
+      value: f6cfb8c3f101748fab3f98b775ae62e1b58891817d14477a2f4cc15e0e1bb9f8
+claims:
+- id: claim-768
+  kind: behavior
+  statement: The RTL exposes scheduling for 768 logical channels.
+  source:
+    type: agent
+  verification:
+    status: supported
+  supported_by:
+  - evidence-synth
+  depends_on:
+    artifacts:
+    - rtl-controller
+    evidence:
+    - evidence-synth
+- id: claim-hw-unverified
+  kind: risk
+  statement: Hardware timing has not yet been verified on the physical board.
+  source:
+    type: human
+  verification:
+    status: unsupported
+evidence:
+- id: evidence-synth
+  type: command
+  strength: reproducible
+  execution:
+    argv:
+    - quartus_sh
+    - --flow
+    - compile
+    - fpga_768
+    cwd: .
+    exit_code: 0
+continuation:
+  next_actions:
+  - id: next-hw
+    description: Run board-level timing and output verification.
+    acceptance:
+    - All 768 outputs can be exercised.
+    - No critical timing violations are observed.
+  unresolved:
+  - Physical driver-board current margin remains to be measured.

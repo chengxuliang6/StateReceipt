@@ -1,0 +1,70 @@
+spec:
+  name: StateReceipt
+  version: '0.1'
+receipt:
+  id: sr-matlab-001
+  created_at: '2026-08-13T02:40:00+08:00'
+  producer:
+    type: ai_agent
+    name: chatgpt
+work:
+  id: QPSK-BER
+  objective: Validate the QPSK transceiver simulation and BER sweep in MATLAB.
+  state: interrupted
+snapshot:
+  artifacts:
+  - id: sim-script
+    path: qpsk_transceiver.m
+    media_type: text/x-matlab
+    digest:
+      algorithm: sha256
+      value: 2552a9843c49f92bc3234007a066238277bb36eb64adf71c1b11da60b6d99e71
+  - id: ber-result
+    path: results/ber_results.mat
+    media_type: application/x-matlab-data
+    digest:
+      algorithm: sha256
+      value: 0c1c541af9cc252a1c759f3ae0416921e745c1d359dd9f782ec3d3ff0c432dcf
+claims:
+- id: claim-ber-produced
+  kind: observation
+  statement: A BER result artifact was produced for the current script snapshot.
+  source:
+    type: tool
+  verification:
+    status: supported
+  supported_by:
+  - evidence-matlab-run
+  depends_on:
+    artifacts:
+    - sim-script
+    - ber-result
+    evidence:
+    - evidence-matlab-run
+- id: claim-sync-risk
+  kind: risk
+  statement: Timing and phase synchronization remain a potential BER sensitivity.
+  source:
+    type: agent
+  verification:
+    status: unknown
+evidence:
+- id: evidence-matlab-run
+  type: command
+  strength: reproducible
+  execution:
+    argv:
+    - matlab
+    - -batch
+    - run('qpsk_transceiver.m')
+    cwd: .
+    exit_code: 0
+continuation:
+  next_actions:
+  - id: next-sync
+    description: Add synchronization impairment tests and compare BER.
+    acceptance:
+    - BER curve is produced for baseline and impaired cases.
+    - All simulation parameters are recorded.
+  unresolved:
+  - Final synchronization algorithm is not yet selected.

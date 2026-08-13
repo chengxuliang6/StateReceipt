@@ -1,0 +1,79 @@
+spec:
+  name: StateReceipt
+  version: '0.1'
+receipt:
+  id: sr-python-001
+  created_at: '2026-08-13T02:30:00+08:00'
+  producer:
+    type: ai_agent
+    name: codex
+work:
+  id: AUTH-17
+  objective: Implement authentication middleware for the REST API.
+  state: in_progress
+snapshot:
+  repository:
+    vcs: git
+    commit: a821caf
+    dirty: true
+  artifacts:
+  - id: auth-middleware
+    path: src/auth/middleware.py
+    media_type: text/x-python
+    digest:
+      algorithm: sha256
+      value: bdf49c3c3882102fc017ffb661108c63a836d065888a4093994398cc55c2ea2f
+  - id: auth-test
+    path: tests/test_auth.py
+    media_type: text/x-python
+    digest:
+      algorithm: sha256
+      value: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+claims:
+- id: claim-tests-pass
+  kind: validation
+  statement: Authentication unit tests pass.
+  source:
+    type: tool
+  verification:
+    status: supported
+  supported_by:
+  - evidence-auth-test
+  depends_on:
+    artifacts:
+    - auth-middleware
+    - auth-test
+    evidence:
+    - evidence-auth-test
+- id: claim-expiry-open
+  kind: assumption
+  statement: Production token expiry policy is not yet finalized.
+  source:
+    type: human
+  verification:
+    status: unsupported
+evidence:
+- id: evidence-auth-test
+  type: test
+  strength: reproducible
+  framework: pytest
+  execution:
+    argv:
+    - python
+    - -m
+    - pytest
+    - tests/test_auth.py
+    cwd: .
+    exit_code: 0
+  summary:
+    passed: 14
+    failed: 0
+continuation:
+  next_actions:
+  - id: next-router
+    description: Integrate middleware into API router.
+    acceptance:
+    - Protected routes return 401 without token.
+    - Authentication tests pass.
+  unresolved:
+  - Production token expiration policy is undecided.
