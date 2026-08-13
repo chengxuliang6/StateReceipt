@@ -9,5 +9,5 @@ MUTATED = '''def normalize_score(value: int) -> int:
     return clamped - (clamped % 5)
 '''
 
-TARGET.write_text(MUTATED, encoding="utf-8")
+TARGET.write_text(MUTATED, encoding="utf-8", newline="\n")
 print(f"Mutated {TARGET.relative_to(ROOT)} after the Stage A handoff")
