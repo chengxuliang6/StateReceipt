@@ -2,6 +2,8 @@
 
 **Machine-verifiable point-in-time receipts for AI-assisted work state.**
 
+**Languages:** English | [简体中文](docs/README.zh-CN.md) | [Español](docs/README.es.md)
+
 StateReceipt is an open, vendor-neutral specification and Python reference CLI for recording claims about a work unit together with explicit evidence, artifact snapshots, validity dependencies, and deterministic freshness checks.
 
 The motivating question is narrow: **when an AI-assisted task is interrupted or continued elsewhere, which claims about the work are still supported by the current artifacts?**
@@ -67,6 +69,8 @@ The same v0.1 schema is exercised against three deliberately different workflows
 ## Specification
 
 Normative semantics live in [`spec/SPEC.md`](spec/SPEC.md). The machine-readable schema is [`spec/statereceipt-v0.1.schema.json`](spec/statereceipt-v0.1.schema.json).
+
+The English specification is the normative source for v0.1. Translated documentation is provided for accessibility; if a translation conflicts with `spec/SPEC.md`, the English normative text controls.
 
 The specification uses RFC-style `MUST`, `SHOULD`, and `MAY` language. StateReceipt v0.1 intentionally does not define a cryptographic signing envelope; future authentication should reuse established attestation mechanisms rather than inventing bespoke cryptography.
 
