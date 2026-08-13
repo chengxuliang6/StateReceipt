@@ -1,0 +1,31 @@
+name: Specification proposal
+description: Propose a StateReceipt semantic or schema change
+title: "[Spec]: "
+labels: ["spec"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What cannot be represented or verified correctly today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed semantics
+      description: Describe the proposed change without relying only on implementation details.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility impact
+      description: What existing receipts or verifiers would be affected?
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example receipt fragment
+      render: yaml
