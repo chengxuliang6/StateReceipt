@@ -49,9 +49,9 @@ def validate_cmd(receipt: Path):
     errs = schema_errors(doc) + semantic_errors(doc)
     if errs:
         for e in errs:
-            console.print(f"[red][ERR][/red] {e}")
+            console.print(f"[red]ERR[/red] {e}")
         raise typer.Exit(1)
-    console.print("[green][OK][/green] schema and references valid")
+    console.print("[green]OK[/green] schema and references valid")
 
 @app.command()
 def verify(receipt: Path, root: Path = typer.Option(Path("."), "--root"), replay: bool = typer.Option(False, "--replay"), json_output: bool = typer.Option(False, "--json")):
@@ -60,8 +60,8 @@ def verify(receipt: Path, root: Path = typer.Option(Path("."), "--root"), replay
         console.print_json(json.dumps(result))
     else:
         for c in result["checks"]:
-            mark = "[OK]" if c["status"] == "pass" else ("[SKIP]" if c["status"] == "skip" else "[ERR]")
-            console.print(f"{mark} {c['level']:9} {c['subject']}: {c['message']}")
+            mark = "OK" if c["status"] == "pass" else ("SKIP" if c["status"] == "skip" else "ERR")
+            console.print(f"{mark:4} {c['level']:9} {c['subject']}: {c['message']}")
         if result["claims"]:
             console.print("\nClaims:")
             for cid, status in result["claims"].items():
