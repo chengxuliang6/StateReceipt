@@ -48,9 +48,10 @@ def validate_cmd(receipt: Path):
     doc = load_receipt(receipt)
     errs = schema_errors(doc) + semantic_errors(doc)
     if errs:
-        for e in errs: console.print(f"[red]✗[/red] {e}")
+        for e in errs:
+            console.print(f"[red][ERR][/red] {e}")
         raise typer.Exit(1)
-    console.print("[green]✓[/green] schema and references valid")
+    console.print("[green][OK][/green] schema and references valid")
 
 @app.command()
 def verify(receipt: Path, root: Path = typer.Option(Path("."), "--root"), replay: bool = typer.Option(False, "--replay"), json_output: bool = typer.Option(False, "--json")):
@@ -59,18 +60,21 @@ def verify(receipt: Path, root: Path = typer.Option(Path("."), "--root"), replay
         console.print_json(json.dumps(result))
     else:
         for c in result["checks"]:
-            mark = "✓" if c["status"] == "pass" else ("-" if c["status"] == "skip" else "!")
+            mark = "[OK]" if c["status"] == "pass" else ("[SKIP]" if c["status"] == "skip" else "[ERR]")
             console.print(f"{mark} {c['level']:9} {c['subject']}: {c['message']}")
         if result["claims"]:
             console.print("\nClaims:")
-            for cid, status in result["claims"].items(): console.print(f"  {cid}: {status}")
-    if not result["valid"]: raise typer.Exit(1)
+            for cid, status in result["claims"].items():
+                console.print(f"  {cid}: {status}")
+    if not result["valid"]:
+        raise typer.Exit(1)
 
 @app.command()
 def inspect(receipt: Path):
     d = load_receipt(receipt)
     t = Table(title=f"StateReceipt {d['receipt']['id']}")
-    t.add_column("Field"); t.add_column("Value")
+    t.add_column("Field")
+    t.add_column("Value")
     t.add_row("Work", d["work"]["id"])
     t.add_row("State", d["work"]["state"])
     t.add_row("Producer", f"{d['receipt']['producer']['type']}:{d['receipt']['producer']['name']}")
