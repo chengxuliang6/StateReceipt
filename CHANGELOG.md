@@ -4,7 +4,7 @@ All notable changes to StateReceipt will be documented here.
 
 The project follows semantic versioning where practical during the 0.x development series; incompatible specification changes may occur before 1.0 and will be called out explicitly.
 
-## [0.1.1] - 2026-09-16
+## [0.1.1] - Unreleased
 
 First PyPI release and maintainer-workflow documentation update. The StateReceipt v0.1 specification and receipt semantics are unchanged.
 
