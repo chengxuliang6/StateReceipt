@@ -1,7 +1,7 @@
 name: Workflow feedback
 description: Report a real StateReceipt trial or assistant handoff
 title: "[Workflow feedback]: "
-labels: ["feedback"]
+labels: ["question"]
 body:
   - type: markdown
     attributes:
