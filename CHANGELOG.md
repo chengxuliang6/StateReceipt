@@ -4,6 +4,22 @@ All notable changes to StateReceipt will be documented here.
 
 The project follows semantic versioning where practical during the 0.x development series; incompatible specification changes may occur before 1.0 and will be called out explicitly.
 
+## [0.1.1] - 2026-09-16
+
+First PyPI release and maintainer-workflow documentation update. The StateReceipt v0.1 specification and receipt semantics are unchanged.
+
+### Packaging and discovery
+
+- Publish wheel and source distribution through GitHub Actions and PyPI Trusted Publishing.
+- Use a standard SPDX `Apache-2.0` project-license declaration and the complete Apache License 2.0 text.
+- Add repository topics and a public workflow-feedback issue form.
+
+### Documentation and integrations
+
+- Add a rendered architecture overview and explicit trust-boundary guide.
+- Add runnable recipes for fresh-session Codex continuation and provider-independent cross-assistant handoff.
+- Add a structured feedback path for real-world workflow reports without claiming unverified adoption.
+
 ## [0.1.0] - 2026-08-13
 
 First public milestone: StateReceipt v0.1 specification draft and Python reference implementation.
