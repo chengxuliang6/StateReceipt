@@ -1,0 +1,62 @@
+name: Workflow feedback
+description: Report a real StateReceipt trial or assistant handoff
+title: "[Workflow feedback]: "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for trying StateReceipt. Please remove secrets, private repository data, personal information, and unreviewed command output before submitting.
+  - type: dropdown
+    id: boundary
+    attributes:
+      label: Handoff boundary
+      description: Which producer/receiver boundary did you exercise?
+      options:
+        - Fresh session with the same assistant
+        - Codex to another assistant
+        - Another assistant to Codex
+        - Assistant to human maintainer
+        - CI or automation workflow
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: StateReceipt version
+      placeholder: 0.1.1
+    validations:
+      required: true
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Workflow tried
+      description: What did the producer leave, and what did the receiver do?
+    validations:
+      required: true
+  - type: dropdown
+    id: result
+    attributes:
+      label: Verification result
+      options:
+        - Supported claims matched the current artifacts
+        - Stale claims were detected after an artifact change
+        - Unknown or unsupported claims required more evidence
+        - Validation or verification failed unexpectedly
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: useful
+    attributes:
+      label: What was useful or unclear?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction or public example
+      description: Optional commands, public repository link, or redacted receipt.
+    validations:
+      required: false
