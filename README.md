@@ -4,7 +4,7 @@
 
 **Languages:** English | [简体中文](docs/README.zh-CN.md) | [Español](docs/README.es.md)
 
-**Current release:** [`v0.1.1`](../../releases/tag/v0.1.1) · [5-minute Quick Start](docs/QUICKSTART.md) · [Specification](spec/SPEC.md) · [Contributing](CONTRIBUTING.md)
+**Current release:** [`v0.1.0`](../../releases/tag/v0.1.0) · **Next:** [`v0.1.1`](docs/releases/v0.1.1.md) prepared for PyPI · [5-minute Quick Start](docs/QUICKSTART.md) · [Specification](spec/SPEC.md) · [Contributing](CONTRIBUTING.md)
 
 StateReceipt is an open, vendor-neutral specification and Python reference CLI for recording claims about a work unit together with explicit evidence, artifact snapshots, validity dependencies, and deterministic freshness checks.
 
@@ -55,13 +55,9 @@ For the original interrupted-work use case, see the [cross-assistant continuatio
 
 StateReceipt is not a memory database, RAG system, chat-history sync format, agent runtime, orchestrator, scheduler, sandbox, or replacement for Git/CI. The deterministic verifier does not ask an LLM to decide whether arbitrary natural-language evidence is logically true.
 
-## Install
+## Install for development
 
-```bash
-python -m pip install statereceipt
-```
-
-For development:
+PyPI Trusted Publishing is prepared for v0.1.1 but the package is not yet published. Until then, install from a checkout:
 
 ```bash
 python -m venv .venv
