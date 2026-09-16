@@ -4,7 +4,7 @@
 
 **Languages:** English | [简体中文](docs/README.zh-CN.md) | [Español](docs/README.es.md)
 
-**Current release:** [`v0.1.0`](../../releases/tag/v0.1.0) · [5-minute Quick Start](docs/QUICKSTART.md) · [Specification](spec/SPEC.md) · [Contributing](CONTRIBUTING.md)
+**Current release:** [`v0.1.1`](../../releases/tag/v0.1.1) · [5-minute Quick Start](docs/QUICKSTART.md) · [Specification](spec/SPEC.md) · [Contributing](CONTRIBUTING.md)
 
 StateReceipt is an open, vendor-neutral specification and Python reference CLI for recording claims about a work unit together with explicit evidence, artifact snapshots, validity dependencies, and deterministic freshness checks.
 
@@ -22,6 +22,23 @@ Claim ──supported_by──> Evidence ──depends_on──> Artifact digest
 
 If a depended-on artifact changes, supporting evidence can become stale and the affected claim can require re-evaluation. In StateReceipt, **stale does not mean false**.
 
+## Architecture
+
+```mermaid
+flowchart TD
+    A["Work unit"] --> B["Capture receipt"]
+    B --> C["Claims and evidence"]
+    B --> D["Artifact digests"]
+    C --> E["Deterministic verifier"]
+    D --> E
+    E --> F{"Current status"}
+    F -->|unchanged support| G["supported"]
+    F -->|artifact changed| H["stale"]
+    F -->|missing or invalid| I["unknown / unsupported"]
+```
+
+The verifier checks explicit relationships and current artifact state; it does not ask an LLM to decide whether arbitrary prose is true. See the [architecture and trust-boundary guide](docs/ARCHITECTURE.md).
+
 ## 5-minute Quick Start
 
 Want to see the core behavior immediately? Follow the copy/paste walkthrough:
@@ -38,7 +55,13 @@ For the original interrupted-work use case, see the [cross-assistant continuatio
 
 StateReceipt is not a memory database, RAG system, chat-history sync format, agent runtime, orchestrator, scheduler, sandbox, or replacement for Git/CI. The deterministic verifier does not ask an LLM to decide whether arbitrary natural-language evidence is logically true.
 
-## Install for development
+## Install
+
+```bash
+python -m pip install statereceipt
+```
+
+For development:
 
 ```bash
 python -m venv .venv
@@ -94,6 +117,8 @@ The same v0.1 schema is exercised across deliberately different workflows:
 - FPGA/Verilog engineering: `examples/fpga-verilog.yaml`
 - MATLAB/research simulation: `examples/matlab-qpsk.yaml`
 - Cross-assistant interrupted-work continuation: [`examples/cross-assistant/`](examples/cross-assistant/README.md)
+
+See [assistant integration recipes](docs/INTEGRATIONS.md) for a fresh Codex session and a provider-independent Codex-to-another-assistant handoff.
 
 ## Specification
 
